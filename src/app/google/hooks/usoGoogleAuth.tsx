@@ -12,7 +12,7 @@ type GoogleProfile = {
   picture?: string;
 };
 
-export const usoGoogleAuth = () => {
+export const useGoogleAuth = () => {      // <-- antes: usoGoogleAuth
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -53,25 +53,16 @@ export const usoGoogleAuth = () => {
 
   // 2) Finaliza el flujo: guarda y redirige
   const finalizeFromGoogleProfile = useCallback((profile: GoogleProfile) => {
-    // Construimos el objeto que quieres
     const datosFormularioGoogle = {
       nombre: profile?.name ?? '',
       correoElectronico: profile?.email ?? '',
-      fotoPerfil: profile?.picture, // si luego lo quieres usar en otro paso
+      fotoPerfil: profile?.picture,
       terminosYCondiciones: true,
     };
-
-    // Guardar en sessionStorage con la clave que ya usa tu página siguiente
     sessionStorage.setItem('datosUsuarioParcial', JSON.stringify(datosFormularioGoogle));
-
-    // Redirigir al paso de imagen + ubicación
     router.push('/ImagenLocalizacion');
   }, [router]);
 
-  return {
-    isLoading,
-    error,
-    handleGoogleAuth,
-    finalizeFromGoogleProfile, // <-- expuesto para usarlo en el callback
-  };
+  return { isLoading, error, handleGoogleAuth, finalizeFromGoogleProfile };
 };
+git
