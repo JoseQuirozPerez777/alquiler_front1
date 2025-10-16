@@ -65,4 +65,3 @@ export const useGoogleAuth = () => {      // <-- antes: usoGoogleAuth
 
   return { isLoading, error, handleGoogleAuth, finalizeFromGoogleProfile };
 };
-git
