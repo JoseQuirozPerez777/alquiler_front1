@@ -12,12 +12,12 @@ type GoogleProfile = {
   picture?: string;
 };
 
-export const usoGoogleAuth = () => {
+// 1) Cambia el nombre interno a useGoogleAuth
+const useGoogleAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // 1) Inicia OAuth con Google
   const handleGoogleAuth = useCallback(async (type: AuthType = 'register') => {
     setIsLoading(true);
     setError(null);
@@ -51,27 +51,22 @@ export const usoGoogleAuth = () => {
     }
   }, []);
 
-  // 2) Finaliza el flujo: guarda y redirige
   const finalizeFromGoogleProfile = useCallback((profile: GoogleProfile) => {
-    // Construimos el objeto que quieres
     const datosFormularioGoogle = {
       nombre: profile?.name ?? '',
       correoElectronico: profile?.email ?? '',
-      fotoPerfil: profile?.picture, // si luego lo quieres usar en otro paso
+      fotoPerfil: profile?.picture,
       terminosYCondiciones: true,
     };
-
-    // Guardar en sessionStorage con la clave que ya usa tu página siguiente
     sessionStorage.setItem('datosUsuarioParcial', JSON.stringify(datosFormularioGoogle));
-
-    // Redirigir al paso de imagen + ubicación
     router.push('/ImagenLocalizacion');
   }, [router]);
 
-  return {
-    isLoading,
-    error,
-    handleGoogleAuth,
-    finalizeFromGoogleProfile, // <-- expuesto para usarlo en el callback
-  };
+  return { isLoading, error, handleGoogleAuth, finalizeFromGoogleProfile };
 };
+
+// 2) Export doble:
+//    - Nombre correcto para la regla de hooks: useGoogleAuth
+//    - Alias para mantener TUS imports actuales: usoGoogleAuth
+export { useGoogleAuth };
+export { useGoogleAuth as usoGoogleAuth };
